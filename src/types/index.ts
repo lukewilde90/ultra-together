@@ -39,12 +39,13 @@ export interface Couple {
   id: string;
   created_at: string;
   updated_at: string;
-  name: string;
-  user_a_id: string;
-  user_b_id: string | null;
+  user1_id: string;
+  user2_id: string | null;
   invite_token: string | null;
   invite_email: string | null;
   active_event_id: string | null;
+  user1?: Profile;
+  user2?: Profile;
 }
 
 export interface TrainingEvent {

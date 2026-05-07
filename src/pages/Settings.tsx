@@ -126,7 +126,7 @@ export default function SettingsPage() {
           </div>
           <div>
             <label className="label">Email</label>
-            <input className="input" value={user?.email ?? ''} disabled className="input opacity-60 cursor-not-allowed" />
+            <input className="input opacity-60 cursor-not-allowed" value={user?.email ?? ''} disabled />
           </div>
           <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-100">
             <div>
