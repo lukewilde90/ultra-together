@@ -34,9 +34,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          # Set this to /your-repo-name/ if deploying to username.github.io/repo-name
-          # Leave as / if using a custom domain or username.github.io root
-          VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || '/' }}
+          VITE_BASE_PATH: /ultra-together/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
