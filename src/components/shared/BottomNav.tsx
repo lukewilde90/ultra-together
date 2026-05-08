@@ -11,7 +11,7 @@ const NAV = [
 
 export default function BottomNav() {
   return (
-    <nav className="bottom-nav safe-area-pb">
+    <nav className="bottom-nav">
       {NAV.map(({ to, icon: Icon, label }) => (
         <NavLink
           key={to}
