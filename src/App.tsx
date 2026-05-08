@@ -34,9 +34,13 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  // import.meta.env.BASE_URL is set by Vite from VITE_BASE_PATH (e.g. '/ultra-together/')
+  // This tells React Router where the app is mounted so routes resolve correctly
+  const basename = import.meta.env.BASE_URL
+
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
           <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />

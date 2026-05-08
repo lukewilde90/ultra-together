@@ -4,19 +4,13 @@
     <meta charset="utf-8" />
     <title>Ultra Together</title>
     <script>
-      // GitHub Pages SPA routing fix
-      // Stores the full URL in sessionStorage then redirects to index.html
-      // index.html reads this and restores the correct route via history.replaceState
-      var pathSegmentsToKeep = 1; // set to 0 for custom domains, 1 for username.github.io/repo
-
+      // GitHub Pages SPA routing fix.
+      // When GitHub Pages gets a request for a deep URL like /ultra-together/dashboard,
+      // it returns a 404. This page catches that, stores the intended URL in
+      // sessionStorage, then redirects to the root index.html which restores it.
       var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+      sessionStorage.redirect = l.href;
+      l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + l.pathname.split('/').slice(0, 2).join('/') + '/?p=1');
     </script>
   </head>
   <body></body>
