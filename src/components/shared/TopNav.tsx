@@ -3,13 +3,14 @@ import { Settings } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 
 const TITLES: Record<string, string> = {
-  '/dashboard': 'Home',
-  '/calendar': 'Calendar',
-  '/sessions': 'Sessions',
-  '/gear': 'Gear',
+  '/dashboard':  'Home',
+  '/calendar':   'Calendar',
+  '/sessions':   'Sessions',
+  '/programme':  'Training Plan',
+  '/gear':       'Gear',
   '/milestones': 'Progress',
-  '/partner': 'Partner',
-  '/settings': 'Settings',
+  '/partner':    'Partner',
+  '/settings':   'Settings',
 }
 
 export default function TopNav() {

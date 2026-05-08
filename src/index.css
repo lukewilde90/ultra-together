@@ -3,8 +3,22 @@
 @tailwind utilities;
 
 @layer base {
+  /* Prevent iOS zoom on input focus — font-size must be >= 16px */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
   body {
     @apply bg-stone-50 text-stone-900 font-sans antialiased;
+    /* Prevent horizontal overflow / scroll on mobile */
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Prevent date inputs overflowing on narrow screens */
+  input[type="date"] {
+    @apply w-full box-border;
+    max-width: 100%;
   }
 }
 
@@ -28,10 +42,12 @@
            hover:bg-stone-200 active:bg-stone-300 transition-colors;
   }
 
+  /* font-size 16px prevents iOS zoom; visual size controlled by padding/height */
   .input {
-    @apply w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm
+    @apply w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-3
            text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2
-           focus:ring-trail-400 focus:border-transparent transition-shadow;
+           focus:ring-trail-400 focus:border-transparent transition-shadow box-border;
+    font-size: 16px;
   }
 
   .label {
@@ -41,5 +57,21 @@
   .bottom-nav {
     @apply fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-100
            flex items-center justify-around px-2 pb-4;
+  }
+
+  /* Modal sheet — locked in place, no body drag */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-end justify-center;
+    /* Prevent background scroll/drag while modal open */
+    touch-action: none;
+  }
+
+  .modal-sheet {
+    @apply relative bg-white rounded-t-3xl w-full max-w-lg shadow-2xl;
+    /* Allow scrolling inside the sheet only */
+    touch-action: pan-y;
+    max-height: 92dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 }

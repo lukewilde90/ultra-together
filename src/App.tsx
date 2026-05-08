@@ -13,6 +13,7 @@ import MilestonesPage from '@/pages/Milestones'
 import GearPage from '@/pages/Gear'
 import PartnerPage from '@/pages/Partner'
 import SettingsPage from '@/pages/Settings'
+import ProgrammePage from '@/pages/Programme'
 import AppLayout from '@/components/shared/AppLayout'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -34,13 +35,9 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  // import.meta.env.BASE_URL is set by Vite from VITE_BASE_PATH (e.g. '/ultra-together/')
-  // This tells React Router where the app is mounted so routes resolve correctly
-  const basename = import.meta.env.BASE_URL
-
   return (
     <AuthProvider>
-      <BrowserRouter basename={basename}>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
           <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
@@ -51,6 +48,7 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/sessions" element={<SessionsPage />} />
+            <Route path="/programme" element={<ProgrammePage />} />
             <Route path="/milestones" element={<MilestonesPage />} />
             <Route path="/gear" element={<GearPage />} />
             <Route path="/partner" element={<PartnerPage />} />

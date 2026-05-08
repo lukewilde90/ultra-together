@@ -26,30 +26,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [event, setEvent] = useState<TrainingEvent | null>(null)
   const [loading, setLoading] = useState(true)
 
+  async function ensureCouple(userId: string, p: Profile): Promise<string> {
+    if (p.couple_id) return p.couple_id
+    const { data, error } = await supabase
+      .from('couples')
+      .insert({ user1_id: userId })
+      .select('id')
+      .single()
+    if (error || !data) { console.error('couple create failed', error); return '' }
+    await supabase.from('profiles').update({ couple_id: data.id }).eq('id', userId)
+    return data.id
+  }
+
   async function loadProfile(userId: string) {
     const { data: p } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle()
+      .from('profiles').select('*').eq('id', userId).maybeSingle()
+    if (!p) return
 
-    setProfile(p ?? null)
+    const coupleId = p.couple_id ?? await ensureCouple(userId, p)
+    setProfile({ ...p, couple_id: coupleId })
 
-    if (p?.couple_id) {
+    if (coupleId) {
       const { data: c } = await supabase
         .from('couples')
-        .select(`*, user1:profiles!couples_user1_id_fkey(*), user2:profiles!couples_user2_id_fkey(*)`)
-        .eq('id', p.couple_id)
+        .select('*, user1:profiles!couples_user1_id_fkey(*), user2:profiles!couples_user2_id_fkey(*)')
+        .eq('id', coupleId)
         .maybeSingle()
       setCouple(c ?? null)
 
       if (c?.active_event_id) {
         const { data: e } = await supabase
-          .from('training_events')
-          .select('*')
-          .eq('id', c.active_event_id)
-          .maybeSingle()
+          .from('training_events').select('*').eq('id', c.active_event_id).maybeSingle()
         setEvent(e ?? null)
+      } else {
+        setEvent(null)
       }
     }
   }
@@ -62,25 +72,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
-      if (session?.user) {
-        loadProfile(session.user.id).finally(() => setLoading(false))
-      } else {
-        setLoading(false)
-      }
+      if (session?.user) loadProfile(session.user.id).finally(() => setLoading(false))
+      else setLoading(false)
     })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setSession(session)
       setUser(session?.user ?? null)
-      if (session?.user) {
-        loadProfile(session.user.id)
-      } else {
-        setProfile(null)
-        setCouple(null)
-        setEvent(null)
-      }
+      if (session?.user) loadProfile(session.user.id)
+      else { setProfile(null); setCouple(null); setEvent(null) }
     })
-
     return () => subscription.unsubscribe()
   }, [])
 
